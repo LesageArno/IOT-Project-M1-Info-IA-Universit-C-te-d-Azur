@@ -18,14 +18,15 @@
 
 // Functions signatures
 void setStrip(float temperature);
-void setVentil(float temperature); // consider onFire to stop fan whenever it happen
+void setVentil(float temperature, bool onFire); // consider onFire to stop fan whenever it happen
 void setClim(float temperature);
 void setRad(float temperature);
+void updateWeightedLuminosity(int luminosity);
 
 float getPhoto();
 float getTemp();
 
-void detectFire(float temperature, int luminosity); // return -> bool onFire
+bool detectFire(float temperature); // return -> bool onFire
 
 // Initialise some datas
 OneWire oneWire(tempPin);
@@ -36,6 +37,10 @@ Adafruit_NeoPixel strip(NUMLEDS, ledPin, NEO_GRB + NEO_KHZ800);
 const float lowThreshold = 20.0f; // Usually set to 20.0f, 28.0f if tested
 const float highThreshold = 30.0f; // Always at 30.0f
 const float maxVentil = 33.5f; // Usually set to 33.5f, 31.0f if tested
+const float avgLightDecay = 0.3f;
+
+// Initialise weightedLuminosity in global scope
+float weightedLuminosity = -1.0f;
 
 //------------------------------------------------------------------------------------------------------------------ void setup
 void setup() {
@@ -65,26 +70,26 @@ void loop() {
   // Initialise scope variables
   float temperature;
   int luminosity;
-  //int[3] luminosity = {}; // Implement light average for fire detection
-  //bool onFire = false;
+  bool onFire;
 
   // Getters
   temperature = getTemp();
   luminosity = getPhoto();
   //Serial.print("Luminosity: "); Serial.println(luminosity, DEC);
+  
+  // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
+  updateWeightedLuminosity(luminosity);
+  onFire = detectFire(temperature);
 
   // Put the climatisation and ventilation if temp too high (note that ventilation increase in speed after the threshold)
   setClim(temperature);
-  setVentil(temperature);
+  setVentil(temperature, onFire);
 
   // Put the radiator if temp too low
   setRad(temperature);
 
   // Manage the colour of the led strip depending on the temperature
   setStrip(temperature);
-
-  // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
-  detectFire(temperature, luminosity);
 
   // Delay to make the sensors work properly
   delay(2000);
@@ -147,8 +152,8 @@ void setRad(float temperature) {
 }
 
 // Ventilation manager
-void setVentil(float temperature) {
-  if (temperature > highThreshold) {
+void setVentil(float temperature, bool onFire) {
+  if (temperature > highThreshold && !onFire) {
     // Set the ventillation from 50 to 255 depending on the temperature above the threshold
     analogWrite(ventilPin, (int)min((int)map(temperature, highThreshold, maxVentil, 50, 255), 255));
   } else {
@@ -156,12 +161,18 @@ void setVentil(float temperature) {
   }
 }
 
+// update weigthed luminosity using exponential decay, this avoid enabling alarm with 
+void updateWeightedLuminosity(int luminosity) {
+  weightedLuminosity = avgLightDecay * weightedLuminosity + (1-avgLightDecay) * luminosity;
+}
+
 //------------------------------------------------------------------------------------------------------------------ Fire Detection
-void detectFire(float temperature, int luminosity) {
+bool detectFire(float temperature) {
   // Hard limit because it may be messy if we transfer in percent
-  if ((temperature > maxVentil) && luminosity < 100) {
+  if ((temperature > maxVentil) && weightedLuminosity < 100.0f) {
     digitalWrite(onboardPin, HIGH);
-  } else {
-    digitalWrite(onboardPin, LOW);
+    return true;
   }
+  digitalWrite(onboardPin, LOW);
+  return false;
 }
