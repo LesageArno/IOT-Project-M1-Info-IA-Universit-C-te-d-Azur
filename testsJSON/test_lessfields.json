@@ -1,0 +1,25 @@
+{
+    "status":{
+        "temperature":23.5,
+        "light":-1,
+        "regul":"HALT",
+        "fire":false,
+        "fanspeed":0
+        },
+    "location":{
+        "room":"282",
+        "gps":{
+            "lon":7.06471621
+        },
+        "address":"Les lucioles"
+    },
+    "regul":{
+        "lt":26,
+        "ht":25.89999962
+    },
+    "reporthost":{
+        "target_ip":"127.0.0.1",
+        "target_port":1880,
+        "sp":2
+    }
+}

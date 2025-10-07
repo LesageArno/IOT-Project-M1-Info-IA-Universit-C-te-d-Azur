@@ -2,6 +2,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <DallasTemperature.h>
 #include <OneWire.h>
+#include <ArduinoJson.h>
 
 //------------------------------------------------------------------------------------------------------------------ Before setup
 // Define input and output pins
@@ -17,16 +18,21 @@
 #define NUMLEDS 5
 
 // Functions signatures
+//- Setters
 void setStrip(float temperature);
-void setVentil(float temperature, bool onFire); // consider onFire to stop fan whenever it happen
-void setClim(float temperature);
-void setRad(float temperature);
-void updateWeightedLuminosity(int luminosity);
+int setVentil(float temperature, bool onFire); // consider onFire to stop fan whenever it happen
+bool setClim(float temperature);
+bool setRad(float temperature);
 
-float getPhoto();
+//- Getters
+int getPhoto();
 float getTemp();
 
+//- Utils
 bool detectFire(float temperature); // return -> bool onFire
+void updateWeightedLuminosity(int luminosity);
+void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled);
+
 
 // Initialise some datas
 OneWire oneWire(tempPin);
@@ -62,7 +68,7 @@ void setup() {
   pinMode(photoPin, INPUT);
   delay(1);
 
-  Serial.println("Setup Done!");
+  //Serial.println("Setup Done!");
 }
 
 //------------------------------------------------------------------------------------------------------------------ void loop
@@ -70,26 +76,35 @@ void loop() {
   // Initialise scope variables
   float temperature;
   int luminosity;
+  int fanSpeed;
   bool onFire;
+  bool isHeated;
+  bool isCooled;
 
   // Getters
   temperature = getTemp();
   luminosity = getPhoto();
-  //Serial.print("Luminosity: "); Serial.println(luminosity, DEC);
   
   // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
   updateWeightedLuminosity(luminosity);
   onFire = detectFire(temperature);
 
   // Put the climatisation and ventilation if temp too high (note that ventilation increase in speed after the threshold)
-  setClim(temperature);
-  setVentil(temperature, onFire);
+  isCooled = setClim(temperature);
+  fanSpeed = setVentil(temperature, onFire);
 
   // Put the radiator if temp too low
-  setRad(temperature);
+  isHeated = setRad(temperature);
 
   // Manage the colour of the led strip depending on the temperature
   setStrip(temperature);
+
+  // Infos
+  sendData(Serial, temperature, luminosity, fanSpeed, onFire, isHeated, isCooled);
+  // Serial.print("Luminosity: "); Serial.print(luminosity, DEC); Serial.print(" [weighted:"); Serial.print(weightedLuminosity, DEC); Serial.println("]");
+  // Serial.print("Temperature: "); Serial.print(temperature); Serial.println(" C");
+  // Serial.print("Fire: "); Serial.println(onFire);
+  // Serial.print("FanSpeed: "); Serial.println(fanSpeed);
 
   // Delay to make the sensors work properly
   delay(2000);
@@ -100,15 +115,12 @@ void loop() {
 //------------------------------------------------------------------------------------------------------------------ Getter functions
 // Temperature getter
 float getTemp() {
-  float t;
   tempSensor.requestTemperaturesByIndex(0);
-  t = tempSensor.getTempCByIndex(0);
-  Serial.print("Temperature: "); Serial.print(t); Serial.println(" C");
-  return t;
+  return tempSensor.getTempCByIndex(0);
 }
 
 // Luminosity getter
-float getPhoto() {
+int getPhoto() {
   return analogRead(photoPin);//(4095-analogRead(photoPin))/4095;
 }
 
@@ -134,31 +146,36 @@ void setStrip(float temperature) {
 }
 
 // Climatisation setter
-void setClim(float temperature) {
+bool setClim(float temperature) {
   if (temperature > highThreshold) {
     digitalWrite(climPin, HIGH);
-  } else {
-    digitalWrite(climPin, LOW);
+    return true;
   }
+  digitalWrite(climPin, LOW);
+  return false;
 }
 
 // Radiator setter
-void setRad(float temperature) {
+bool setRad(float temperature) {
   if (temperature < lowThreshold) {
     digitalWrite(radPin, HIGH);
-  } else {
-    digitalWrite(radPin, LOW);
-  }
+    return true;
+  } 
+  digitalWrite(radPin, LOW);
+  return false;
 }
 
 // Ventilation manager
-void setVentil(float temperature, bool onFire) {
+int setVentil(float temperature, bool onFire) {
+  int fanSpeed = 0;
   if (temperature > highThreshold && !onFire) {
     // Set the ventillation from 50 to 255 depending on the temperature above the threshold
-    analogWrite(ventilPin, (int)min((int)map(temperature, highThreshold, maxVentil, 50, 255), 255));
+    fanSpeed = (int)min((int)map(temperature, highThreshold, maxVentil, 50, 255), 255);
+    analogWrite(ventilPin, fanSpeed);
   } else {
     analogWrite(ventilPin, 0);
   }
+  return fanSpeed;
 }
 
 // update weigthed luminosity using exponential decay, this avoid enabling alarm with 
@@ -175,4 +192,50 @@ bool detectFire(float temperature) {
   }
   digitalWrite(onboardPin, LOW);
   return false;
+}
+
+//------------------------------------------------------------------------------------------------------------------ Send Data
+
+void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled) {
+  DynamicJsonDocument doc(1024);
+
+  JsonObject status = doc.createNestedObject("status");
+    status["temperature"] = temperature;
+    status["light"] = luminosity;
+    status["regul"] = "HALT";
+    status["fire"] = onFire;
+    if (isHeated) {status["heat"] = "ON";} else {status["heat"] = "OFF";}
+    if (isCooled) {status["cold"] = "ON";} else {status["cold"] = "OFF";}
+    status["fanspeed"] = fanSpeed;
+
+  JsonObject location = doc.createNestedObject("location");
+    location["room"] = "282";
+
+    JsonObject gps = location.createNestedObject("gps");
+      gps["lat"] = 43.61708414;
+      gps["lon"] = 7.06471621;
+    location["address"] = "Les lucioles";
+
+  JsonObject regul = doc.createNestedObject("regul");
+    regul["lt"] = 26;
+    regul["ht"] = 25.89999962;
+
+  JsonObject info = doc.createNestedObject("info");
+    info["ident"] = "ESP32 123";
+    info["user"] = "AL";
+    info["loc"] = "A Biot";
+
+  JsonObject net = doc.createNestedObject("net");
+    net["uptime"] = "55";
+    net["ssid"] = "Livebox-B870";
+    net["mac"] = "AC:67:B2:37:C9:48";
+    net["ip"] = "192.168.1.45";
+
+  JsonObject reporthost = doc.createNestedObject("reporthost");
+    reporthost["target_ip"] = "127.0.0.1";
+    reporthost["target_port"] = 1880;
+    reporthost["sp"] = 2;
+
+  serializeJson(doc, s);
+  s.println();
 }
