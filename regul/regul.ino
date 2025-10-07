@@ -1,8 +1,9 @@
-// Include libraries
+//------------------------------------------------------------------------------------------------------------------ Include libraries
 #include <Adafruit_NeoPixel.h>
 #include <DallasTemperature.h>
 #include <OneWire.h>
 
+//------------------------------------------------------------------------------------------------------------------ Before setup
 // Define input and output pins
 #define tempPin 23
 #define climPin 19
@@ -17,14 +18,14 @@
 
 // Functions signatures
 void setStrip(float temperature);
-void setVentil(float temperature);
+void setVentil(float temperature); // consider onFire to stop fan whenever it happen
 void setClim(float temperature);
 void setRad(float temperature);
 
 float getPhoto();
 float getTemp();
 
-void detectFire(float temperature, int luminosity);
+void detectFire(float temperature, int luminosity); // return -> bool onFire
 
 // Initialise some datas
 OneWire oneWire(tempPin);
@@ -36,7 +37,7 @@ const float lowThreshold = 20.0f; // Usually set to 20.0f, 28.0f if tested
 const float highThreshold = 30.0f; // Always at 30.0f
 const float maxVentil = 33.5f; // Usually set to 33.5f, 31.0f if tested
 
-
+//------------------------------------------------------------------------------------------------------------------ void setup
 void setup() {
   // Begin serial communication
   Serial.begin(9600);
@@ -59,11 +60,13 @@ void setup() {
   Serial.println("Setup Done!");
 }
 
-
+//------------------------------------------------------------------------------------------------------------------ void loop
 void loop() {
   // Initialise scope variables
   float temperature;
   int luminosity;
+  //int[3] luminosity = {}; // Implement light average for fire detection
+  //bool onFire = false;
 
   // Getters
   temperature = getTemp();
@@ -89,8 +92,7 @@ void loop() {
 
 
 
-
-
+//------------------------------------------------------------------------------------------------------------------ Getter functions
 // Temperature getter
 float getTemp() {
   float t;
@@ -105,6 +107,7 @@ float getPhoto() {
   return analogRead(photoPin);//(4095-analogRead(photoPin))/4095;
 }
 
+//------------------------------------------------------------------------------------------------------------------ Setter functions
 // LED strip manager
 void setStrip(float temperature) {
   int r, g, b;
@@ -153,7 +156,7 @@ void setVentil(float temperature) {
   }
 }
 
-// Fire detection
+//------------------------------------------------------------------------------------------------------------------ Fire Detection
 void detectFire(float temperature, int luminosity) {
   // Hard limit because it may be messy if we transfer in percent
   if ((temperature > maxVentil) && luminosity < 100) {
