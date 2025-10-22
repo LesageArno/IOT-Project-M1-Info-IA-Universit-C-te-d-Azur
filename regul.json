@@ -1,0 +1,1550 @@
+[
+    {
+        "id": "9c946da449f2861b",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e359e1a6fb5638d6",
+        "type": "tab",
+        "label": "Flow_TP1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5a48948fe62b2462",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "COM3",
+        "serialbaud": "9600",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
+        "id": "0b4208974db3067e",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-custom",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "ESP32 - Fire detection device ",
+                "default": "#4B7930",
+                "baseColor": "#ca3838",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#4B7930",
+                    "value": "#ca3838",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#ca3838",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#000000",
+                    "edited": true
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#ca3838",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "ESP32 - Fire detection device",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 20,
+                "cy": 20,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "d1b9e6cbc9aec845",
+        "type": "ui_tab",
+        "name": "Real time Data Dashboard",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f3e130be1e1ae630",
+        "type": "ui_group",
+        "name": "Temperature data",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 2,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d4cc253dc3c158e7",
+        "type": "ui_group",
+        "name": "Brightness data",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 3,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "45646db279962ab8",
+        "type": "ui_group",
+        "name": "Fan speed",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 4,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d3c763150deca0e5",
+        "type": "ui_group",
+        "name": "System state",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 1,
+        "disp": true,
+        "width": 4,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "00e8096810df947f",
+        "type": "ui_group",
+        "name": "System informations",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 5,
+        "disp": true,
+        "width": "4",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "029dcfcc93d2d737",
+        "type": "ui_group",
+        "name": "Temperature regulation",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 6,
+        "disp": true,
+        "width": "23",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ff69985fc62194be",
+        "type": "ui_group",
+        "name": "Thresholds",
+        "tab": "d1b9e6cbc9aec845",
+        "order": 7,
+        "disp": true,
+        "width": 27,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "17e366680dfc4e1a",
+        "type": "serial in",
+        "z": "e359e1a6fb5638d6",
+        "name": "ESP32 - Fire detection device",
+        "serial": "5a48948fe62b2462",
+        "x": 280,
+        "y": 320,
+        "wires": [
+            [
+                "33eeec705f5694df",
+                "a23125c66033130c"
+            ]
+        ]
+    },
+    {
+        "id": "33eeec705f5694df",
+        "type": "json",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 550,
+        "y": 320,
+        "wires": [
+            [
+                "b5a1fce0332df66b",
+                "9a1a98b0ad2ac218",
+                "25b486bf98b39342",
+                "880556d2919c70e2",
+                "9d710422396ef2ac",
+                "e361aa0c0c0bdb38",
+                "a38890666a81526e",
+                "23bf40316c04a06e",
+                "c86f9332520c13a7",
+                "da3fc89d3adb8c1c",
+                "47a8301652db6366",
+                "27266ee585fa23ad",
+                "60054692716e2c78",
+                "5bc659a374845d67",
+                "1e1f9ba574e2d2bb",
+                "e2765dabd8f268b5",
+                "f7f7401d8d12053d",
+                "a51a3640a2aad9ab",
+                "51596a05dca1ee91"
+            ]
+        ]
+    },
+    {
+        "id": "b5a1fce0332df66b",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Temperature",
+        "func": "msg.payload = msg.payload.status.temperature;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 60,
+        "wires": [
+            [
+                "56078ef4195b6eb6",
+                "7e6735757237cb81"
+            ]
+        ]
+    },
+    {
+        "id": "9a1a98b0ad2ac218",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Light",
+        "func": "let raw = msg.payload.status.light;\n//let luminosite = Math.pow(Math.sqrt(raw - 4095),2);\n//luminosite = Math.round(luminosite);\n\nmsg.payload = Math.sqrt(Math.pow(Math.round((raw / 4095)*100)-100,2));\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 140,
+        "wires": [
+            [
+                "3ebde464fe740e3c",
+                "5bc6093d7a6e8289"
+            ]
+        ]
+    },
+    {
+        "id": "25b486bf98b39342",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Fan speed",
+        "func": "msg.payload = Math.round((msg.payload.status.fanspeed /255)*100);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 240,
+        "wires": [
+            [
+                "24eb2c4c0c906bd3",
+                "e4c0f4fed250aa65",
+                "05227b17ad8fda88"
+            ]
+        ]
+    },
+    {
+        "id": "3ebde464fe740e3c",
+        "type": "ui_gauge",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "d4cc253dc3c158e7",
+        "order": 1,
+        "width": 8,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Brightness",
+        "label": "%",
+        "format": "{{msg.payload}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#57e389",
+            "#ff7800",
+            "#d62728"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1050,
+        "y": 160,
+        "wires": [],
+        "icon": "font-awesome/fa-lightbulb-o"
+    },
+    {
+        "id": "56078ef4195b6eb6",
+        "type": "ui_gauge",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "f3e130be1e1ae630",
+        "order": 1,
+        "width": 8,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "min": "0",
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#ff7f0e",
+            "#ca3838"
+        ],
+        "seg1": "20",
+        "seg2": "30",
+        "diff": false,
+        "className": "",
+        "x": 1050,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7e6735757237cb81",
+        "type": "ui_chart",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "f3e130be1e1ae630",
+        "order": 2,
+        "width": 8,
+        "height": 5,
+        "label": "Temperature variations",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1080,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5bc6093d7a6e8289",
+        "type": "ui_chart",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "d4cc253dc3c158e7",
+        "order": 2,
+        "width": 8,
+        "height": 5,
+        "label": "Brightness variations",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1080,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "24eb2c4c0c906bd3",
+        "type": "ui_gauge",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "45646db279962ab8",
+        "order": 1,
+        "width": 8,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Fan speed",
+        "label": "%",
+        "format": "{{msg.payload}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1050,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "c2c4050acfc4bf91",
+        "type": "ui_switch",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Fan",
+        "tooltip": "{{msg.payload}}",
+        "group": "d3c763150deca0e5",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": true,
+        "className": "",
+        "x": 1230,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e4c0f4fed250aa65",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Switch ON/OFF",
+        "func": "if (msg.payload > 0) {\n    msg.payload = true;   // allume le ui_switch\n} else {\n    msg.payload = false;  // éteint le ui_switch\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 200,
+        "wires": [
+            [
+                "c2c4050acfc4bf91"
+            ]
+        ]
+    },
+    {
+        "id": "05227b17ad8fda88",
+        "type": "ui_chart",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "45646db279962ab8",
+        "order": 2,
+        "width": 8,
+        "height": 5,
+        "label": "Fan activation(s)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1060,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68ea50ca19a83d01",
+        "type": "ui_switch",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Fire",
+        "tooltip": "{{msg.payload}}",
+        "group": "d3c763150deca0e5",
+        "order": 1,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1030,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29d4cb11b9545174",
+        "type": "ui_switch",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Heat",
+        "tooltip": "{{msg.payload}}",
+        "group": "d3c763150deca0e5",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1030,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7d2c956396f711e8",
+        "type": "ui_switch",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Cold",
+        "tooltip": "{{msg.payload}}",
+        "group": "d3c763150deca0e5",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "decouple": "true",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1030,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "880556d2919c70e2",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Heat",
+        "func": "msg.payload = msg.payload.status.heat\nif (msg.payload === \"OFF\"){\n    msg.payload = false;\n}else{\n    msg.payload = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 320,
+        "wires": [
+            [
+                "29d4cb11b9545174"
+            ]
+        ]
+    },
+    {
+        "id": "9d710422396ef2ac",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Cold",
+        "func": "msg.payload = msg.payload.status.cold\nif (msg.payload === \"OFF\") {\n    msg.payload = false;\n} else {\n    msg.payload = true;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 400,
+        "wires": [
+            [
+                "7d2c956396f711e8"
+            ]
+        ]
+    },
+    {
+        "id": "e361aa0c0c0bdb38",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Room ",
+        "format": "{{msg.payload.location.room}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "a55b10364667fd6b",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 1,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Location ",
+        "format": "",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 780,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "a38890666a81526e",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Latitude : ",
+        "format": "{{msg.payload.location.gps.lat}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 800,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "23bf40316c04a06e",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 5,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Longitude : ",
+        "format": "{{msg.payload.location.gps.lon}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 810,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "c86f9332520c13a7",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Address : ",
+        "format": "{{msg.payload.location.address}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 800,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "da3fc89d3adb8c1c",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 7,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Uptime : ",
+        "format": "{{msg.payload.net.uptime}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 800,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "47a8301652db6366",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 8,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "SSID : ",
+        "format": "{{msg.payload.net.ssid}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "27266ee585fa23ad",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 9,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "MAC : ",
+        "format": "{{msg.payload.net.mac}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "7db976b1f3e840e9",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 6,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Net",
+        "format": "",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 770,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "5bc659a374845d67",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 12,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Target IP : ",
+        "format": "{{msg.payload.reporthost.target_ip}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 810,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "1e1f9ba574e2d2bb",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 13,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Target port : ",
+        "format": "{{msg.payload.reporthost.target_port}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 810,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "851d0b1a9f1b4713",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 11,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "Report host",
+        "format": "",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "60054692716e2c78",
+        "type": "ui_text",
+        "z": "e359e1a6fb5638d6",
+        "group": "00e8096810df947f",
+        "order": 10,
+        "width": 4,
+        "height": 1,
+        "name": "",
+        "label": "IP : ",
+        "format": "{{msg.payload.net.ip}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 790,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "e2765dabd8f268b5",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Heat 2",
+        "func": "let state = -666;\nif (msg.payload.status.heat === \"ON\") {\n    state = 1;\n} \nif (msg.payload.status.heat === \"OFF\"){\n    state = 0;\n}\nmsg.payload = state\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 360,
+        "wires": [
+            [
+                "0f26b2a3997a5d12"
+            ]
+        ]
+    },
+    {
+        "id": "f7f7401d8d12053d",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Cold 2",
+        "func": "let state = -666;\nif (msg.payload.status.cold === \"ON\") {\n    state = 1;\n}\nif (msg.payload.status.cold === \"OFF\") {\n    state = 0;\n}\nmsg.payload = state\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 440,
+        "wires": [
+            [
+                "736cb6b14e98bc93"
+            ]
+        ]
+    },
+    {
+        "id": "0f26b2a3997a5d12",
+        "type": "ui_chart",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "029dcfcc93d2d737",
+        "order": 2,
+        "width": 23,
+        "height": 4,
+        "label": "Heat activation(s)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1070,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "736cb6b14e98bc93",
+        "type": "ui_chart",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "group": "029dcfcc93d2d737",
+        "order": 1,
+        "width": 23,
+        "height": 4,
+        "label": "Cold activation(s)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1070,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a51a3640a2aad9ab",
+        "type": "ui_template",
+        "z": "e359e1a6fb5638d6",
+        "group": "029dcfcc93d2d737",
+        "name": "Node-Red Dashbooard Custom CSS",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<script>\n    (function(scope) {\n    scope.$watch('msg', function(msg) {\n        if (!msg || !msg.payload || !msg.payload.status) return;\n        const body = document.querySelector('body');\n        if (msg.payload.status.fire === true) {\n            body.classList.add('fire-alert');\n        } else {\n            body.classList.remove('fire-alert');\n        }\n    });\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 370,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "26d7c7bd2aeaa7e8",
+        "type": "ui_template",
+        "z": "e359e1a6fb5638d6",
+        "group": "",
+        "name": "Template de base",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    body {\n        background: -webkit-linear-gradient(55deg, #4b0000 0%, #ff4500 35%, #ff8c00 60%, #ffd700 100%);\n        -webkit-touch-callout: none !important;\n    }\n\n    body.nr-dashboard-theme md-toolbar,\n    body.nr-dashboard-theme md-content md-card {\n        background-color: transparent !important;\n        color: #FFFFFF;\n    }\n\n    ui-card-panel {\n        background-color: rgba(255, 255, 255, 0.3) !important;\n        border-radius: 10px !important;\n    }\n\n    .nr-dashboard-theme ui-card-panel {\n        border: none;\n    }\n\n    .nr-dashboard-theme ui-card-panel p.nr-dashboard-cartitle {\n        color: rgba(255, 255, 255, 0.5) !important;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 310,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a23125c66033130c",
+        "type": "debug",
+        "z": "e359e1a6fb5638d6",
+        "name": "FIRE : ",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9487f51123937df9",
+        "type": "ui_slider",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Low temperature Thresholds",
+        "tooltip": "",
+        "group": "ff69985fc62194be",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": 0,
+        "max": "40",
+        "step": "0.1",
+        "className": "",
+        "x": 780,
+        "y": 1080,
+        "wires": [
+            [
+                "7521ca64f308282a"
+            ]
+        ]
+    },
+    {
+        "id": "cce0549b6afea54c",
+        "type": "serial out",
+        "z": "e359e1a6fb5638d6",
+        "name": "Serial OUT",
+        "serial": "5a48948fe62b2462",
+        "x": 1390,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "7521ca64f308282a",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Low Threshold ",
+        "func": "global.set(\"LowThreshold\", msg.payload);\nmsg.payload = JSON.stringify({ command: \"LowThreshold\", value: msg.payload });\nmsg.payload += \"\\n\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 1080,
+        "wires": [
+            [
+                "cce0549b6afea54c",
+                "0368b41ffa91417f"
+            ]
+        ]
+    },
+    {
+        "id": "0712f4c2acdf5a69",
+        "type": "ui_slider",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "High temperature Threshold",
+        "tooltip": "",
+        "group": "ff69985fc62194be",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": "20",
+        "max": "80",
+        "step": "0.1",
+        "className": "",
+        "x": 780,
+        "y": 1180,
+        "wires": [
+            [
+                "ee12746826ea2223"
+            ]
+        ]
+    },
+    {
+        "id": "ee12746826ea2223",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "High Threshold",
+        "func": "global.set(\"HighThreshold\", msg.payload);\nmsg.payload = JSON.stringify({ command: \"HighThreshold\", value: msg.payload });\nmsg.payload += \"\\n\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 1180,
+        "wires": [
+            [
+                "cce0549b6afea54c",
+                "0368b41ffa91417f"
+            ]
+        ]
+    },
+    {
+        "id": "2c6b171b5e6b8447",
+        "type": "inject",
+        "z": "e359e1a6fb5638d6",
+        "name": "Starting system",
+        "props": [],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 1120,
+        "wires": [
+            [
+                "2f404587d9ef820e",
+                "a7d55cdc3a74d118",
+                "1d4857d92b4ac992",
+                "281c7e60eeea28b3"
+            ]
+        ]
+    },
+    {
+        "id": "2f404587d9ef820e",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Low Threshold injection",
+        "func": "let savedValue = global.get(\"LowThreshold\") || 20; // valeur par défaut 0\nmsg.payload = savedValue;\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 1080,
+        "wires": [
+            [
+                "9487f51123937df9"
+            ]
+        ]
+    },
+    {
+        "id": "a7d55cdc3a74d118",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "High Threshold Injection",
+        "func": "let savedValue = global.get(\"HighThreshold\") || 30; // valeur par défaut 0\nmsg.payload = savedValue;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 1160,
+        "wires": [
+            [
+                "0712f4c2acdf5a69"
+            ]
+        ]
+    },
+    {
+        "id": "1d4857d92b4ac992",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Max Ventil Injection",
+        "func": "let savedValue = global.get(\"VentilThreshold\") || 33.5; // valeur par défaut 0\nmsg.payload = savedValue;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 1220,
+        "wires": [
+            [
+                "8f780e974283b1ff"
+            ]
+        ]
+    },
+    {
+        "id": "8f780e974283b1ff",
+        "type": "ui_slider",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Max Ventil Threshold",
+        "tooltip": "",
+        "group": "ff69985fc62194be",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": "25",
+        "max": "90",
+        "step": "0.1",
+        "className": "",
+        "x": 760,
+        "y": 1240,
+        "wires": [
+            [
+                "e3afcd453ddc2d94"
+            ]
+        ]
+    },
+    {
+        "id": "e3afcd453ddc2d94",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Ventil Threshold",
+        "func": "global.set(\"VentilThreshold\", msg.payload);\nmsg.payload = JSON.stringify({ command: \"VentilThreshold\", value: msg.payload });\nmsg.payload += \"\\n\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 1240,
+        "wires": [
+            [
+                "cce0549b6afea54c",
+                "0368b41ffa91417f"
+            ]
+        ]
+    },
+    {
+        "id": "281c7e60eeea28b3",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Light Decay factor injection",
+        "func": "let savedValue = global.get(\"LightDecayFactor\") || 0.3; // valeur par défaut 0\nmsg.payload = savedValue;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 1300,
+        "wires": [
+            [
+                "5faab107185629f1"
+            ]
+        ]
+    },
+    {
+        "id": "5faab107185629f1",
+        "type": "ui_slider",
+        "z": "e359e1a6fb5638d6",
+        "name": "",
+        "label": "Light Decay Factor",
+        "tooltip": "",
+        "group": "ff69985fc62194be",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "payload",
+        "topicType": "msg",
+        "min": "0",
+        "max": "1",
+        "step": "0.01",
+        "className": "",
+        "x": 750,
+        "y": 1300,
+        "wires": [
+            [
+                "c09d37184f7d45c7"
+            ]
+        ]
+    },
+    {
+        "id": "c09d37184f7d45c7",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Light Decay factor",
+        "func": "global.set(\"LightDecayFactor\", msg.payload);\nmsg.payload = JSON.stringify({ command: \"LightDecayFactor\", value: msg.payload });\nmsg.payload += \"\\n\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 1300,
+        "wires": [
+            [
+                "cce0549b6afea54c",
+                "0368b41ffa91417f"
+            ]
+        ]
+    },
+    {
+        "id": "0368b41ffa91417f",
+        "type": "debug",
+        "z": "e359e1a6fb5638d6",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "51596a05dca1ee91",
+        "type": "function",
+        "z": "e359e1a6fb5638d6",
+        "name": "Fire Payload",
+        "func": "msg.payload = msg.payload.status.fire\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "68ea50ca19a83d01"
+            ]
+        ]
+    },
+    {
+        "id": "dc946305bb4b6f6c",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-serialport": "2.0.3",
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]

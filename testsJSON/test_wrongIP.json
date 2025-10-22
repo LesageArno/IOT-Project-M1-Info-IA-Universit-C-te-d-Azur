@@ -1,0 +1,39 @@
+{
+    "status":{
+        "temperature":23.5,
+        "light":1,
+        "regul":"HALT",
+        "fire":false,
+        "heat":"OFF",
+        "cold":"OFF",
+        "fanspeed":0
+        },
+    "location":{
+        "room":"282",
+        "gps":{
+            "lat":43.61708414,
+            "lon":7.06471621
+        },
+        "address":"Les lucioles"
+    },
+    "regul":{
+        "lt":26,
+        "ht":25.89999962
+    },
+    "info":{
+        "ident":"ESP32 123",
+        "user":"AL",
+        "loc":"A Biot"
+    },
+    "net":{
+        "uptime":"55",
+        "ssid":"Livebox-B870",
+        "mac":"AC:67:B2:37:C9:48",
+        "ip":"999.168.1.45"
+    },
+    "reporthost":{
+        "target_ip":"127.0.0.1",
+        "target_port":1880,
+        "sp":2
+    }
+}
