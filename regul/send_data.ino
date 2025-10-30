@@ -1,5 +1,7 @@
+#include <WiFi.h>
+
 //------------------------------------------------------------------------------------------------------------------ Send Data
-void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled) {
+void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold) {
   DynamicJsonDocument doc(1024);
 
   JsonObject status = doc.createNestedObject("status");
@@ -20,8 +22,8 @@ void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed
     location["address"] = "Les lucioles";
 
   JsonObject regul = doc.createNestedObject("regul");
-    regul["lt"] = 26;
-    regul["ht"] = 25.89999962;
+    regul["lt"] = lowThreshold;
+    regul["ht"] = highThreshold;
 
   JsonObject info = doc.createNestedObject("info");
     info["ident"] = "ESP32 123";
@@ -29,10 +31,10 @@ void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed
     info["loc"] = "A Biot";
 
   JsonObject net = doc.createNestedObject("net");
-    net["uptime"] = "55";
-    net["ssid"] = "Livebox-B870";
-    net["mac"] = "AC:67:B2:37:C9:48";
-    net["ip"] = "192.168.1.45";
+    net["uptime"] = "...";
+    net["ssid"] = WiFi.SSID();
+    net["mac"] = WiFi.macAddress();
+    net["ip"] = WiFi.localIP();
 
   JsonObject reporthost = doc.createNestedObject("reporthost");
     reporthost["target_ip"] = "127.0.0.1";

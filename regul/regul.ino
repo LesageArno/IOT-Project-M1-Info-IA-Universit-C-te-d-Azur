@@ -15,6 +15,9 @@
 // Define the number of DEL
 #define NUMLEDS 5
 
+// Define if we allow the connection to a wireless connection
+#define FORCE_CONNECTION true
+
 // Functions signatures
 //- Setters
 void setStrip(float temperature, float lowThreshold, float highThreshold);
@@ -28,9 +31,10 @@ float getTemp();
 
 //- Utils
 bool detectFire(float temperature, float maxVentil, float weightedLuminosity); // return -> bool onFire
-void updateWeightedLuminosity(int luminosity, float avgLightDecay, float weightedLuminosity);
-void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled);
+float updateWeightedLuminosity(int luminosity, float avgLightDecay, float weightedLuminosity);
+void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold);
 void receiveData(HardwareSerial &s, float *lowThreshold, float *highThreshold, float *maxVentil, float *avgLightDecay);
+bool connectWifi();
 
 //-Init
 void initStrip();
@@ -44,13 +48,13 @@ float maxVentil = 33.5f; // Usually set to 33.5f, 31.0f if tested
 float avgLightDecay = 0.3f;
 
 // Initialise weightedLuminosity in global scope
-float weightedLuminosity = 0.0f;
+float weightedLuminosity = 4000.0f;
 
 //------------------------------------------------------------------------------------------------------------------ void setup
 void setup() {
   // Begin serial communication
   Serial.begin(9600);
-  delay(2000);  
+  delay(2000);
 
   // Define the pins as either input or outputs
   pinMode(climPin, OUTPUT);
@@ -60,9 +64,20 @@ void setup() {
   pinMode(radPin, OUTPUT);
   pinMode(photoPin, INPUT);
 
+  // For some reason, when uplodading, the ventilation is high, so set it to LOW at start
+  digitalWrite(ventilPin, LOW);
+
   // Init strip and temperature
   initStrip();
   initTemp();
+
+  // Force the connection or just try to connect with or without success.
+  if (FORCE_CONNECTION) {
+    while(!connectWifi("Mon petit ESP GB"));
+  } else {
+    connectWifi("Mon petit ESP GB");
+  }
+  
   
   delay(1);
 
@@ -87,7 +102,7 @@ void loop() {
   receiveData(Serial, &lowThreshold, &highThreshold, &maxVentil, &avgLightDecay);
   
   // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
-  updateWeightedLuminosity(luminosity, avgLightDecay, weightedLuminosity);
+  weightedLuminosity = updateWeightedLuminosity(luminosity, avgLightDecay, weightedLuminosity);
   onFire = detectFire(temperature, maxVentil, weightedLuminosity);
 
   // Put the climatisation and ventilation if temp too high (note that ventilation increase in speed after the threshold)
@@ -101,7 +116,8 @@ void loop() {
   setStrip(temperature, lowThreshold, highThreshold);
 
   // Infos
-  sendData(Serial, temperature, luminosity, fanSpeed, onFire, isHeated, isCooled);
+  sendData(Serial, temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold);
+  //Serial.println(weightedLuminosity);
 
   // Delay to make the sensors work properly
   delay(2000);
