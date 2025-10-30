@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------------------------------------------------ Include libraries
 
 #include <ArduinoJson.h>
+#include <ESPAsyncWebServer.h>
+#include "routes.h"
 
 //------------------------------------------------------------------------------------------------------------------ Before setup
 // Define input and output pins
@@ -41,14 +43,65 @@ void initStrip();
 void initTemp();
 
 
-// Initialise constant
+// Initialise "constant"
 float lowThreshold = 20.0f; // Usually set to 20.0f, 28.0f if tested
 float highThreshold = 30.0f; // Always at 30.0f
 float maxVentil = 33.5f; // Usually set to 33.5f, 31.0f if tested
 float avgLightDecay = 0.3f;
+int lightThreshold = 100;
 
-// Initialise weightedLuminosity in global scope
+// Host for periodic data report
+String target_ip = "";
+int target_port = 1880;
+int target_sp = 0; // Remaining time before the ESP stops transmitting
+
+// Initialise and or declare variables in global scope
 float weightedLuminosity = 4000.0f;
+float temperature;
+int luminosity;
+int fanSpeed;
+bool onFire;
+bool isHeated;
+bool isCooled;
+
+// Action to do once in a while in void loop
+void DoSmtg(int delai){
+  static uint32_t tick = 0;
+  if (millis() - tick <delai) { 
+    return; 
+  } else { /* Do stuff here every XX seconds */ 
+    tick = millis();
+
+    // Getter
+    temperature = getTemp();
+    luminosity = getPhoto();
+
+    // Receive potential data
+    receiveData(Serial, &lowThreshold, &highThreshold, &maxVentil, &avgLightDecay);
+
+    // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
+    weightedLuminosity = updateWeightedLuminosity(luminosity, avgLightDecay, weightedLuminosity);
+    onFire = detectFire(temperature, maxVentil, weightedLuminosity);
+
+    // Put the climatisation and ventilation if temp too high (note that ventilation increase in speed after the threshold)
+    isCooled = setClim(temperature, highThreshold);
+    fanSpeed = setVentil(temperature, onFire, lowThreshold, highThreshold, maxVentil);
+
+    // Put the radiator if temp too low
+    isHeated = setRad(temperature, lowThreshold);
+
+    // Manage the colour of the led strip depending on the temperature
+    setStrip(temperature, lowThreshold, highThreshold);
+
+    // Infos
+    sendData(Serial, temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold);
+    //Serial.println(weightedLuminosity);
+  } 
+}
+
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
+
 
 //------------------------------------------------------------------------------------------------------------------ void setup
 void setup() {
@@ -78,6 +131,14 @@ void setup() {
     connectWifi("Mon petit ESP GB");
   }
   
+  // Initialize FSUSED
+  FSUSED.begin(true);
+
+  // Setup routes of the ESP Web server
+  setup_http_routes(&server);
+  
+  // Start ESP Web server
+  server.begin();
   
   delay(1);
 
@@ -86,39 +147,6 @@ void setup() {
 
 //------------------------------------------------------------------------------------------------------------------ void loop
 void loop() {
-  // Initialise scope variables
-  float temperature;
-  int luminosity;
-  int fanSpeed;
-  bool onFire;
-  bool isHeated;
-  bool isCooled;
-
-  // Getters
-  temperature = getTemp();
-  luminosity = getPhoto();
-
-  // Receive potential data
-  receiveData(Serial, &lowThreshold, &highThreshold, &maxVentil, &avgLightDecay);
-  
-  // Detect a potential fire when luminosity is low (luminosity is reversed due to the sensor)
-  weightedLuminosity = updateWeightedLuminosity(luminosity, avgLightDecay, weightedLuminosity);
-  onFire = detectFire(temperature, maxVentil, weightedLuminosity);
-
-  // Put the climatisation and ventilation if temp too high (note that ventilation increase in speed after the threshold)
-  isCooled = setClim(temperature, highThreshold);
-  fanSpeed = setVentil(temperature, onFire, lowThreshold, highThreshold, maxVentil);
-
-  // Put the radiator if temp too low
-  isHeated = setRad(temperature, lowThreshold);
-
-  // Manage the colour of the led strip depending on the temperature
-  setStrip(temperature, lowThreshold, highThreshold);
-
-  // Infos
-  sendData(Serial, temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold);
-  //Serial.println(weightedLuminosity);
-
-  // Delay to make the sensors work properly
-  delay(2000);
+  // Update data every 2000 ms
+  DoSmtg(2000);
 }
