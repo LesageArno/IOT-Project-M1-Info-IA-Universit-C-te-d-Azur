@@ -64,6 +64,12 @@ bool onFire;
 bool isHeated;
 bool isCooled;
 
+// Declare variables to forces component of the system to be set to particular value
+bool forceFire = false;
+bool forceHeater = false;
+bool forceCooler = false; 
+bool forceVentil = false;
+
 // Target_sp
 extern int target_sp;
 

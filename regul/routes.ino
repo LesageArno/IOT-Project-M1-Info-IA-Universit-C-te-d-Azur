@@ -11,10 +11,18 @@
 #include "routes.h"
 
 #define USE_SERIAL Serial
-extern float temperature, lowThreshold, highThreshold;
+extern float temperature, lowThreshold, highThreshold, maxVentil, avgLightDecay;
 extern int luminosity, lightThreshold;
 extern bool isHeated, isCooled, onFire;
+extern bool forceFire, forceHeater, forceCooler, forceVentil;
 
+
+// Helper function to transform string to boolean
+bool toBool(const String &value) {
+  if (value.equalsIgnoreCase("true") || value == "1" || value.equalsIgnoreCase("on")) return true;
+  if (value.equalsIgnoreCase("false") || value == "0" || value.equalsIgnoreCase("off")) return false;
+  return false; // default if invalid
+}
 
 /*===================================================*/
 String processor(const String& var){
@@ -126,13 +134,82 @@ void setup_http_routes(AsyncWebServer* server) {
   // This route allows users to change thresholds values through GET params
   server->on("/set", HTTP_GET, [](AsyncWebServerRequest *request){
       /* A route with a side effect : this get request has a param and should     
-       *  set a new light_threshold ... used for regulation !
-       */
-      if (request->hasArg("light_threshold")) { // request may have arguments
-	lightThreshold = atoi(request->arg("light_threshold").c_str());
-	request->send_P(200, "text/plain", "Threshold Set !");
+      *  set a new light_threshold ... used for regulation !
+      */
+
+      // Count the number of valid parameter in the request and return 404 if one is not known. 
+      int paramCounter = 0;
+
+      // Update Higher threshold
+      float tmpFloat;
+      if (request->hasArg("ht")) {
+        //Ensure thresholds integrity before pushing updates
+        tmpFloat = request->arg("ht").toFloat();
+        if (tmpFloat < maxVentil && tmpFloat > lowThreshold) {
+          highThreshold = tmpFloat;
+        }
+        paramCounter++;
       }
-    });
+
+      // Update Lower Threshold
+      if (request->hasArg("lt")) {
+        tmpFloat = request->arg("lt").toFloat();
+        if (tmpFloat < highThreshold) {
+          lowThreshold = tmpFloat;
+        }
+        paramCounter++;
+      }
+
+      // Update Max Venitl Threshold
+      if (request->hasArg("vt")) {
+        tmpFloat = request->arg("vt").toFloat();
+        if (highThreshold < tmpFloat) {
+          maxVentil = tmpFloat;
+        }
+        paramCounter++;
+      }
+
+      // Update Average Light Decay factor (Light sensibility for the exponential average)
+      if (request->hasArg("avgLightDecay")) {
+        tmpFloat = request->arg("avgLightDecay").toFloat();
+        if (avgLightDecay >= 0 && avgLightDecay <= 1) {
+          avgLightDecay = tmpFloat;
+        }
+        paramCounter++;
+      }
+
+      // Action cooler
+      if (request->hasArg("cooler")) {
+        forceCooler = toBool(request->arg("cooler"));
+        paramCounter++;
+      } 
+
+      // Action Heater
+      if (request->hasArg("heater")) {
+        forceHeater = toBool(request->arg("heater"));
+        paramCounter++;
+      }
+
+      // Action Ventilation
+      if (request->hasArg("ventil")) {
+        forceVentil = toBool(request->arg("ventil"));
+        paramCounter++;
+      }
+
+      // Action Fire alarm
+      if (request->hasArg("fire")) {
+        forceFire = toBool(request->arg("fire"));
+        paramCounter++;
+      }
+
+      // If no parameter 404
+      if (paramCounter >= 1) {
+        request->send_P(200, "text/plain", "Operation(s) Done !");
+      } else {
+        request->send(404);
+      }
+    	
+  });
   
   server->on("/target", HTTP_POST, [](AsyncWebServerRequest *request){
       /* A route receiving a POST request with Internet coordinates 
