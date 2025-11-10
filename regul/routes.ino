@@ -5,6 +5,8 @@
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <WiFi.h>
+#include <ArduinoJson.h>
+
 
 #include "routes.h"
 
@@ -79,35 +81,48 @@ void setup_http_routes(AsyncWebServer* server) {
     request->send(FSUSED, "/esp.css", "text/css");
   });
   #endif
-  
-  server->on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
-      /* The most simple route => hope a response with temperature value */ 
-      //USE_SERIAL.printf("GET /temperature request \n"); 
-      /* Exemple de ce qu'il ne faut surtout pas écrire car yield + async => core dump !*/
-      //request->send_P(200, "text/plain", get_temperature(TempSensor).c_str());
-      request->send_P(200, "text/plain", String(temperature).c_str());
-    });
 
-  server->on("/light", HTTP_GET, [](AsyncWebServerRequest *request){
-      /* The most simple route => hope a response with light value */ 
-      request->send_P(200, "text/plain", String(luminosity).c_str());
-    });
-  
-  server->on("/fire", HTTP_GET, [](AsyncWebServerRequest *request){
-      /* The most simple route => hope a response with fire value */ 
-      request->send_P(200, "text/plain", String(onFire).c_str());
-    });
-  
-  server->on("/ht", HTTP_GET, [](AsyncWebServerRequest *request){
-      /* The most simple route => hope a response with high threshold value */ 
-      request->send_P(200, "text/plain", String(highThreshold).c_str());
-    });
-  
-  server->on("/lt", HTTP_GET, [](AsyncWebServerRequest *request){
-      /* The most simple route => hope a response with low threshold value */ 
-      request->send_P(200, "text/plain", String(lowThreshold).c_str());
-    });
+  server->on("/value", HTTP_GET, [](AsyncWebServerRequest *request){
+    /* The most simple route => hope a response with temperature value */ 
+    //USE_SERIAL.printf("GET /temperature request \n"); 
+    /* Exemple de ce qu'il ne faut surtout pas écrire car yield + async => core dump !*/
+    //request->send_P(200, "text/plain", get_temperature(TempSensor).c_str());
+    
+    // Create the JSON to return
+    DynamicJsonDocument doc(256);
+    String jsonToSend;
 
+    // If the client requested temperature
+    if (request->hasArg("temperature")) {
+      doc["temperature"] = temperature;
+    }
+      
+    // If the client requested light
+    if (request->hasArg("light")) {
+      doc["light"] = luminosity;
+    }
+
+    // If the client requested fire status
+    if (request->hasArg("fire")) {
+      doc["fire"] = onFire;
+    }
+
+    // If the client requested low threshold
+    if (request->hasArg("lt")) {
+      doc["lt"] = lowThreshold;
+    }
+
+    // If the client requested high threshold
+    if (request->hasArg("ht")) {
+      doc["ht"] = highThreshold;
+    }
+
+    // Send the JSON
+    serializeJson(doc, jsonToSend);
+    request->send_P(200, "application/json", jsonToSend.c_str());
+    
+  });
+  
   // This route allows users to change thresholds values through GET params
   server->on("/set", HTTP_GET, [](AsyncWebServerRequest *request){
       /* A route with a side effect : this get request has a param and should     
