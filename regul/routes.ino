@@ -4,12 +4,15 @@
  */
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <WiFi.h>
 
 #include "routes.h"
 
 #define USE_SERIAL Serial
-extern float temperature;
+extern float temperature, lowThreshold, highThreshold;
 extern int luminosity, lightThreshold;
+extern bool isHeated, isCooled, onFire;
+
 
 /*===================================================*/
 String processor(const String& var){
@@ -17,16 +20,33 @@ String processor(const String& var){
   /* accessors functions get_... are in sensors.ino file   */
 
   //Serial.println(var);
-  if(var == "TEMPERATURE"){
+  if (var == "TEMPERATURE") {
     return String(temperature);
     /* On aimerait écrire : return get_temperature(TempSensor);
      * mais c'est un exemple de ce qu'il ne faut surtout pas écrire ! 
      * yield + async => core dump ! 
      */
     //return get_temperature(TempSensor);
-  }
-  else if(var == "LIGHT"){
+  } else if (var == "LIGHT") {
     return String(luminosity);
+  } else if (var == "SSID") {
+    return String(WiFi.SSID());
+  } else if (var == "MAC") {
+    return String(WiFi.macAddress());
+  } else if (var == "IP") {
+    return String(WiFi.localIP());
+  } else if (var == "WHERE") {
+    return "Les Lucioles";
+  } else if (var == "UPTIME") {
+    return String(millis()/1000);
+  } else if (var == "HEATER") {
+    return String(isHeated);
+  } else if (var == "COOLER") {
+    return String(isCooled);
+  } else if (var == "LT") {
+    return String(lowThreshold);
+  } else if (var == "HT") {
+    return String(highThreshold);
   }
   return String(); // parce que => cf doc de asyncwebserver
 }
@@ -62,7 +82,7 @@ void setup_http_routes(AsyncWebServer* server) {
   
   server->on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
       /* The most simple route => hope a response with temperature value */ 
-      USE_SERIAL.printf("GET /temperature request \n"); 
+      //USE_SERIAL.printf("GET /temperature request \n"); 
       /* Exemple de ce qu'il ne faut surtout pas écrire car yield + async => core dump !*/
       //request->send_P(200, "text/plain", get_temperature(TempSensor).c_str());
       request->send_P(200, "text/plain", String(temperature).c_str());
@@ -71,6 +91,21 @@ void setup_http_routes(AsyncWebServer* server) {
   server->on("/light", HTTP_GET, [](AsyncWebServerRequest *request){
       /* The most simple route => hope a response with light value */ 
       request->send_P(200, "text/plain", String(luminosity).c_str());
+    });
+  
+  server->on("/fire", HTTP_GET, [](AsyncWebServerRequest *request){
+      /* The most simple route => hope a response with fire value */ 
+      request->send_P(200, "text/plain", String(onFire).c_str());
+    });
+  
+  server->on("/ht", HTTP_GET, [](AsyncWebServerRequest *request){
+      /* The most simple route => hope a response with high threshold value */ 
+      request->send_P(200, "text/plain", String(highThreshold).c_str());
+    });
+  
+  server->on("/lt", HTTP_GET, [](AsyncWebServerRequest *request){
+      /* The most simple route => hope a response with low threshold value */ 
+      request->send_P(200, "text/plain", String(lowThreshold).c_str());
     });
 
   // This route allows users to change thresholds values through GET params

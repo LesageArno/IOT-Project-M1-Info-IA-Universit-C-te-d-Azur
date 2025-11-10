@@ -18,6 +18,8 @@ void wificonnect_multi(String hostname){
   wm.addAP("IOT", "iotmiage");
   wm.addAP("Bbox-EA6814CF", "Hvtx6bGfD4Sn7PCs2r");
   wm.addAP("Livebox-46F0", "EUedRJuyxCXiJaD3fo");
+  wm.addAP("Microonde_a_air_comprime", "12345678");
+  wm.addAP("ArnoTragbarenHotspot", "Ah76&OP*");
   
   //WiFi.mode(WIFI_OFF);   
   WiFi.mode(WIFI_STA); // Set WiFi to station mode 

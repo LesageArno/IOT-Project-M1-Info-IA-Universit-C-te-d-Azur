@@ -1,7 +1,9 @@
 #include <WiFi.h>
 
-//------------------------------------------------------------------------------------------------------------------ Send Data
-void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold) {
+extern String target_ip;
+extern int target_port, target_sp;
+
+DynamicJsonDocument createJsonState(float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold) {
   DynamicJsonDocument doc(1024);
 
   JsonObject status = doc.createNestedObject("status");
@@ -31,16 +33,22 @@ void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed
     info["loc"] = "A Biot";
 
   JsonObject net = doc.createNestedObject("net");
-    net["uptime"] = "...";
+    net["uptime"] = millis()/1000;
     net["ssid"] = WiFi.SSID();
     net["mac"] = WiFi.macAddress();
     net["ip"] = WiFi.localIP();
 
   JsonObject reporthost = doc.createNestedObject("reporthost");
-    reporthost["target_ip"] = "127.0.0.1";
-    reporthost["target_port"] = 1880;
-    reporthost["sp"] = 2;
+    reporthost["target_ip"] = target_ip;
+    reporthost["target_port"] = target_port;
+    reporthost["sp"] = target_sp;
+  
+  return doc;
+}
 
-  serializeJson(doc, s);
+
+//------------------------------------------------------------------------------------------------------------------ Send Data
+void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold) {
+  serializeJson(createJsonState(temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold) , s);
   s.println();
 }

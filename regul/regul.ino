@@ -64,10 +64,13 @@ bool onFire;
 bool isHeated;
 bool isCooled;
 
+// Target_sp
+extern int target_sp;
+
 // Action to do once in a while in void loop
 void DoSmtg(int delai){
   static uint32_t tick = 0;
-  if (millis() - tick <delai) { 
+  if (millis() - tick < delai) { 
     return; 
   } else { /* Do stuff here every XX seconds */ 
     tick = millis();
@@ -126,7 +129,9 @@ void setup() {
 
   // Force the connection or just try to connect with or without success.
   if (FORCE_CONNECTION) {
-    while(!connectWifi("Mon petit ESP GB"));
+    while(!connectWifi("Mon petit ESP GB")) {
+      Serial.println("Connection failed, retry...");
+    };
   } else {
     connectWifi("Mon petit ESP GB");
   }
@@ -148,5 +153,5 @@ void setup() {
 //------------------------------------------------------------------------------------------------------------------ void loop
 void loop() {
   // Update data every 2000 ms
-  DoSmtg(2000);
+  DoSmtg(target_sp*1000);
 }
