@@ -35,12 +35,17 @@ float getTemp();
 bool detectFire(float temperature, float maxVentil, float weightedLuminosity); // return -> bool onFire
 float updateWeightedLuminosity(int luminosity, float avgLightDecay, float weightedLuminosity);
 void sendData(HardwareSerial &s, float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold);
+void sendDataHTTP(float temperature, int luminosity, int fanSpeed, bool onFire, bool isHeated, bool isCooled, float lowThreshold, float highThreshold);
 void receiveData(HardwareSerial &s, float *lowThreshold, float *highThreshold, float *maxVentil, float *avgLightDecay);
 bool connectWifi();
 
 //-Init
 void initStrip();
 void initTemp();
+
+//-Void Loop main functions
+void DoSmtg(int delai);
+void DoPeriodicReport(int delai);
 
 
 // Initialise "constant"
@@ -72,6 +77,61 @@ bool forceVentil = false;
 
 // Target_sp
 extern int target_sp;
+
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
+
+
+//------------------------------------------------------------------------------------------------------------------ void setup
+void setup() {
+  // Begin serial communication
+  Serial.begin(9600);
+  delay(2000);
+
+  // Define the pins as either input or outputs
+  pinMode(climPin, OUTPUT);
+  pinMode(ventilPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(onboardPin, OUTPUT);
+  pinMode(radPin, OUTPUT);
+  pinMode(photoPin, INPUT);
+
+  // For some reason, when uplodading, the ventilation is high, so set it to LOW at start
+  digitalWrite(ventilPin, LOW);
+
+  // Init strip and temperature
+  initStrip();
+  initTemp();
+
+  // Force the connection or just try to connect with or without success.
+  if (FORCE_CONNECTION) {
+    while(!connectWifi("Mon petit ESP GB")) {
+      Serial.println("Connection failed, retry...");
+    }
+  } else {
+    connectWifi("Mon petit ESP GB");
+  }
+  
+  // Initialize FSUSED
+  FSUSED.begin(true);
+
+  // Setup routes of the ESP Web server
+  setup_http_routes(&server);
+  
+  // Start ESP Web server
+  server.begin();
+  
+  delay(1);
+
+  //Serial.println("Setup Done!");
+}
+
+//------------------------------------------------------------------------------------------------------------------ void loop
+void loop() {
+  // Update data every 2000 ms
+  DoSmtg(2000);
+  //DoPeriodicReport(target_sp*1000);
+}
 
 // Action to do once in a while in void loop
 void DoSmtg(int delai){
@@ -108,56 +168,12 @@ void DoSmtg(int delai){
   } 
 }
 
-// Create AsyncWebServer object on port 80
-AsyncWebServer server(80);
-
-
-//------------------------------------------------------------------------------------------------------------------ void setup
-void setup() {
-  // Begin serial communication
-  Serial.begin(9600);
-  delay(2000);
-
-  // Define the pins as either input or outputs
-  pinMode(climPin, OUTPUT);
-  pinMode(ventilPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
-  pinMode(onboardPin, OUTPUT);
-  pinMode(radPin, OUTPUT);
-  pinMode(photoPin, INPUT);
-
-  // For some reason, when uplodading, the ventilation is high, so set it to LOW at start
-  digitalWrite(ventilPin, LOW);
-
-  // Init strip and temperature
-  initStrip();
-  initTemp();
-
-  // Force the connection or just try to connect with or without success.
-  if (FORCE_CONNECTION) {
-    while(!connectWifi("Mon petit ESP GB")) {
-      Serial.println("Connection failed, retry...");
-    };
-  } else {
-    connectWifi("Mon petit ESP GB");
+void DoPeriodicReport(int delai) {
+  static uint32_t tick = 0;
+  if ((millis() - tick < delai) || delai == 0) { 
+    return; 
+  } else { /* Do stuff here every XX seconds */ 
+    tick = millis();
+    sendDataHTTP(temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold);
   }
-  
-  // Initialize FSUSED
-  FSUSED.begin(true);
-
-  // Setup routes of the ESP Web server
-  setup_http_routes(&server);
-  
-  // Start ESP Web server
-  server.begin();
-  
-  delay(1);
-
-  //Serial.println("Setup Done!");
-}
-
-//------------------------------------------------------------------------------------------------------------------ void loop
-void loop() {
-  // Update data every 2000 ms
-  DoSmtg(target_sp*1000);
 }
