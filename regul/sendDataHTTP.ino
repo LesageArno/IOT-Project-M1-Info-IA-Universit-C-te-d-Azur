@@ -9,7 +9,8 @@ void sendDataHTTP(float temperature, int luminosity, int fanSpeed, bool onFire, 
   HTTPClient http;
 
   // Build full URL
-  String url = "http://" + target_ip + ":" + String(target_port);
+  String url = "http://" + target_ip + ":" + String(target_port) + "/esp";
+  Serial.println(url);
 
   // Retrieve the JSON to send via POST
   DynamicJsonDocument doc = createJsonState(temperature, luminosity, fanSpeed, onFire, isHeated, isCooled, lowThreshold, highThreshold);
@@ -19,10 +20,10 @@ void sendDataHTTP(float temperature, int luminosity, int fanSpeed, bool onFire, 
 
   // Start http connection
   http.begin(url);
-  http.addHeader("Content-Type", "application/json");
+  http.addHeader("Content-Type", "plain/text");
 
   // Perform POST
-  int httpCode = http.POST(payload.c_str());
+  int httpCode = http.POST(payload);
 
   // Handle response
   if (httpCode > 0) {

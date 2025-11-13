@@ -130,7 +130,7 @@ void setup() {
 void loop() {
   // Update data every 2000 ms
   DoSmtg(2000);
-  //DoPeriodicReport(target_sp*1000);
+  DoPeriodicReport(target_sp*1000);
 }
 
 // Action to do once in a while in void loop
